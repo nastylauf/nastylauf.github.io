@@ -1,8 +1,10 @@
 // js/pages/home.js
-import { tutorsData } from '../data/tutors.js';
 import { debounce } from '../modules/utils.js';
 
 export function initHome() {
+  // Загрузка цитаты дня
+  loadQuoteOfTheDay();
+
   const searchInput = document.getElementById('searchInput');
 
   // Функция плавного перехода
@@ -42,6 +44,30 @@ export function initHome() {
   setTimeout(() => {
     document.body.style.opacity = '1';
   }, 100);
+}
+
+async function loadQuoteOfTheDay() {
+  try {
+    const response = await fetch('https://api.quotable.io/random');
+    if (!response.ok) {
+      throw new Error('Failed to fetch quote');
+    }
+    const quote = await response.json();
+    const quoteElement = document.getElementById('quoteOfTheDay');
+    if (quoteElement) {
+      quoteElement.innerHTML = `
+        <blockquote>"${quote.content}"</blockquote>
+        <cite>— ${quote.author}</cite>
+      `;
+    }
+  } catch (error) {
+    console.error('Error loading quote:', error);
+    const quoteElement = document.getElementById('quoteOfTheDay');
+    if (quoteElement) {
+      quoteElement.innerHTML =
+        '<p>Цитата дня: "Образование — это оружие, самое мощное, которым вы можете изменить мир." — Нельсон Мандела</p>';
+    }
+  }
 }
 
 function animateOnLoad() {

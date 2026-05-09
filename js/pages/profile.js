@@ -1,8 +1,12 @@
 // js/pages/profile.js
-import { tutorsData } from '../data/tutors.js';
+import { getTutorsData } from '../data/tutors.js';
 import { getFromLocalStorage, saveToLocalStorage } from '../modules/utils.js';
 
-export function initProfilePage() {
+let tutorsData = [];
+
+export async function initProfilePage() {
+  // Загрузка данных репетиторов
+  tutorsData = await getTutorsData();
   // Данные из localStorage
   let myLessons = getFromLocalStorage('myLessons', []);
   let favorites = getFromLocalStorage('favorites', []);

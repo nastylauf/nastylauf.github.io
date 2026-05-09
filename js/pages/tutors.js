@@ -1,10 +1,22 @@
 // js/pages/tutors.js
-import { tutorsData } from '../data/tutors.js';
+import { getTutorsData } from '../data/tutors.js';
 import { debounce, getFromLocalStorage, saveToLocalStorage } from '../modules/utils.js';
 
-let currentTutors = [...tutorsData];
+let currentTutors = [];
 
-export function initTutorsPage() {
+export async function initTutorsPage() {
+  // Показать индикатор загрузки
+  const tutorsGrid = document.getElementById('tutorsGrid');
+  tutorsGrid.innerHTML = '<div class="loading">Загрузка репетиторов...</div>';
+
+  // Загрузка данных из API
+  try {
+    currentTutors = await getTutorsData();
+  } catch (error) {
+    console.error('Failed to load tutors data:', error);
+    // Данные уже загружены в getTutorsData как fallback
+  }
+
   // Плавное появление страницы
   document.body.style.opacity = '0';
   document.body.style.transition = 'opacity 0.4s ease';
@@ -74,7 +86,7 @@ export function initTutorsPage() {
   }
 
   function filterAndSortTutors() {
-    let filtered = [...tutorsData];
+    let filtered = [...currentTutors];
 
     const searchValue = searchInput.value.toLowerCase().trim();
     const subject = filterSubject.value;
@@ -134,7 +146,7 @@ export function initTutorsPage() {
 
   // Запись на занятие
   function bookLesson(tutorId) {
-    const tutor = tutorsData.find((t) => t.id === tutorId);
+    const tutor = currentTutors.find((t) => t.id === tutorId);
     if (!tutor) return;
 
     let myLessons = getFromLocalStorage('myLessons', []);

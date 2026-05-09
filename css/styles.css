@@ -999,6 +999,36 @@ h3 {
   border-bottom: 3px solid var(--primary-color);
 }
 
+/* Индикатор загрузки */
+.loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: var(--gray-color);
+}
+
+/* Цитата дня */
+.quote-of-the-day {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quote-of-the-day blockquote {
+  font-style: italic;
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+  color: var(--light-color);
+}
+
+.quote-of-the-day cite {
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
 .tab-content {
   min-height: 400px;
 }

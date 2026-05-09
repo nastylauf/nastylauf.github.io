@@ -1,5 +1,4 @@
 // js/pages/subjects.js
-import { tutorsData } from '../data/tutors.js';
 
 const subjectsList = [
   'Математика',

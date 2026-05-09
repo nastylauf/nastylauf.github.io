@@ -1,91 +1,96 @@
 // js/data/tutors.js
-export const tutorsData = [
-  {
-    id: 1,
-    name: 'Александр Смирнов',
-    specialty: 'Математика',
-    rating: 4.9,
-    reviews: 128,
-    price: 800,
-    experience: '10 лет',
-    avatar: '👨‍🏫',
-    description: 'Опытный преподаватель математики. Подготовка к ЕГЭ, ОГЭ и олимпиадам.',
-  },
-  {
-    id: 2,
-    name: 'Елена Петрова',
-    specialty: 'Английский',
-    rating: 4.95,
-    reviews: 95,
-    price: 950,
-    experience: '8 лет',
-    avatar: '👩‍🏫',
-    description: 'Преподаватель английского с международным сертификатом CELTA.',
-  },
-  {
-    id: 3,
-    name: 'Иван Козлов',
-    specialty: 'Физика',
-    rating: 4.8,
-    reviews: 87,
-    price: 750,
-    experience: '7 лет',
-    avatar: '👨‍🏫',
-    description: 'Специалист по физике. Подготовка к ЕГЭ и олимпиадам.',
-  },
-  {
-    id: 4,
-    name: 'Мария Волкова',
-    specialty: 'Русский',
-    rating: 4.85,
-    reviews: 112,
-    price: 700,
-    experience: '9 лет',
-    avatar: '👩‍🏫',
-    description: 'Учитель русского языка и литературы. Подготовка к ЕГЭ.',
-  },
-  {
-    id: 5,
-    name: 'Дмитрий Морозов',
-    specialty: 'Информатика',
-    rating: 4.92,
-    reviews: 76,
-    price: 1200,
-    experience: '6 лет',
-    avatar: '👨‍💻',
-    description: 'Программист и преподаватель. Python, алгоритмы, ЕГЭ по информатике.',
-  },
-  {
-    id: 6,
-    name: 'Анна Кузьмина',
-    specialty: 'Химия',
-    rating: 4.87,
-    reviews: 64,
-    price: 850,
-    experience: '8 лет',
-    avatar: '👩‍🔬',
-    description: 'Преподаватель химии. Подготовка к ЕГЭ и олимпиадам.',
-  },
-  {
-    id: 7,
-    name: 'Павел Сергеев',
-    specialty: 'Математика',
-    rating: 4.75,
-    reviews: 103,
-    price: 950,
-    experience: '11 лет',
-    avatar: '👨‍🏫',
-    description: 'Математика для школьников и студентов.',
-  },
-  {
-    id: 8,
-    name: 'Олеся Романова',
-    specialty: 'Английский',
-    rating: 4.78,
-    reviews: 89,
-    price: 1100,
-    experience: '7 лет',
-    avatar: '👩‍🏫',
-    description: 'Разговорный английский и подготовка к IELTS/TOEFL.',
-  },
+const subjects = [
+  'Математика',
+  'Английский',
+  'Физика',
+  'Русский',
+  'Информатика',
+  'Химия',
+  'История',
+  'Биология',
 ];
+
+const firstNames = [
+  'Александр',
+  'Елена',
+  'Иван',
+  'Мария',
+  'Дмитрий',
+  'Анна',
+  'Павел',
+  'Олеся',
+  'Сергей',
+  'Кристина',
+  'Максим',
+  'Юлия',
+  'Андрей',
+  'Екатерина',
+  'Николай',
+];
+const lastNames = [
+  'Смирнов',
+  'Петрова',
+  'Козлов',
+  'Волкова',
+  'Морозов',
+  'Кузьмина',
+  'Сергеев',
+  'Романова',
+  'Иванов',
+  'Соколова',
+  'Попов',
+  'Лебедева',
+  'Козлова',
+  'Новикова',
+  'Морозова',
+];
+
+export async function getTutorsData() {
+  try {
+    console.log('Fetching data from ReqRes API...');
+    const response = await fetch('https://reqres.in/api/users?page=1');
+    console.log('Response status:', response.status);
+    if (!response.ok) {
+      throw new Error('Failed to fetch tutors data');
+    }
+    const data = await response.json();
+    console.log('Data received:', data);
+    const users = data.data;
+
+    // Адаптируем данные под формат репетиторов
+    const tutors = users.map((user, index) => ({
+      id: user.id,
+      name: `${user.first_name} ${user.last_name}`,
+      specialty: subjects[Math.floor(Math.random() * subjects.length)],
+      rating: (4.5 + Math.random() * 0.5).toFixed(2),
+      reviews: Math.floor(Math.random() * 200) + 50,
+      price: Math.floor(Math.random() * 500) + 700,
+      experience: `${Math.floor(Math.random() * 10) + 5} лет`,
+      avatar: user.avatar || (Math.random() > 0.5 ? '👨‍🏫' : '👩‍🏫'),
+      description: `Опытный преподаватель ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}. Подготовка к ЕГЭ и олимпиадам.`,
+    }));
+    console.log('Tutors generated:', tutors);
+    return tutors;
+  } catch (error) {
+    console.error('Error fetching tutors data:', error);
+    // Fallback to dynamic local generation
+    console.log('Using fallback dynamic data');
+    const tutors = [];
+    for (let i = 0; i < 10; i++) {
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      tutors.push({
+        id: i + 1,
+        name: `${firstName} ${lastName}`,
+        specialty: subjects[Math.floor(Math.random() * subjects.length)],
+        rating: (4.5 + Math.random() * 0.5).toFixed(2),
+        reviews: Math.floor(Math.random() * 200) + 50,
+        price: Math.floor(Math.random() * 500) + 700,
+        experience: `${Math.floor(Math.random() * 10) + 5} лет`,
+        avatar: Math.random() > 0.5 ? '👨‍🏫' : '👩‍🏫',
+        description: `Опытный преподаватель ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}. Подготовка к ЕГЭ и олимпиадам.`,
+      });
+    }
+    return tutors;
+  }
+}
