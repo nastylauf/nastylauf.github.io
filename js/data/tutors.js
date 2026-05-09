@@ -10,40 +10,89 @@ const subjects = [
   'Биология',
 ];
 
-const firstNames = [
+const maleFirstNames = [
   'Александр',
-  'Елена',
   'Иван',
-  'Мария',
   'Дмитрий',
-  'Анна',
   'Павел',
-  'Олеся',
   'Сергей',
-  'Кристина',
   'Максим',
-  'Юлия',
   'Андрей',
-  'Екатерина',
   'Николай',
+  'Владимир',
+  'Михаил',
 ];
-const lastNames = [
+const femaleFirstNames = [
+  'Елена',
+  'Мария',
+  'Анна',
+  'Олеся',
+  'Кристина',
+  'Юлия',
+  'Екатерина',
+  'Анастасия',
+  'Ольга',
+  'Наталья',
+];
+const surnameBases = [
   'Смирнов',
-  'Петрова',
+  'Петров',
   'Козлов',
-  'Волкова',
+  'Волков',
   'Морозов',
-  'Кузьмина',
+  'Кузнецов',
   'Сергеев',
-  'Романова',
+  'Романов',
   'Иванов',
-  'Соколова',
+  'Соколов',
   'Попов',
-  'Лебедева',
-  'Козлова',
-  'Новикова',
-  'Морозова',
+  'Лебедев',
+  'Козлов',
+  'Новиков',
+  'Морозов',
 ];
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function makeFemaleSurname(surname) {
+  if (surname.endsWith('ский') || surname.endsWith('ской')) {
+    return surname.slice(0, -2) + 'ая';
+  }
+  if (surname.endsWith('ий') || surname.endsWith('ый') || surname.endsWith('ой')) {
+    return surname.slice(0, -2) + 'ая';
+  }
+  if (surname.endsWith('ко')) {
+    return surname;
+  }
+  if (
+    surname.endsWith('ин') ||
+    surname.endsWith('ов') ||
+    surname.endsWith('ев') ||
+    surname.endsWith('ёв') ||
+    surname.endsWith('ын')
+  ) {
+    return surname + 'а';
+  }
+  return surname + 'а';
+}
+
+function getRandomRussianName() {
+  const gender = Math.random() > 0.45 ? 'female' : 'male';
+  const firstName =
+    gender === 'male'
+      ? maleFirstNames[getRandomInt(maleFirstNames.length)]
+      : femaleFirstNames[getRandomInt(femaleFirstNames.length)];
+  const surnameBase = surnameBases[getRandomInt(surnameBases.length)];
+  const lastName = gender === 'male' ? surnameBase : makeFemaleSurname(surnameBase);
+
+  return {
+    gender,
+    fullName: `${firstName} ${lastName}`,
+    avatar: gender === 'male' ? '👨‍🏫' : '👩‍🏫',
+  };
+}
 
 export async function getTutorsData() {
   try {
@@ -58,17 +107,20 @@ export async function getTutorsData() {
     const users = data.data;
 
     // Адаптируем данные под формат репетиторов
-    const tutors = users.map((user, index) => ({
-      id: user.id,
-      name: `${user.first_name} ${user.last_name}`,
-      specialty: subjects[Math.floor(Math.random() * subjects.length)],
-      rating: (4.5 + Math.random() * 0.5).toFixed(2),
-      reviews: Math.floor(Math.random() * 200) + 50,
-      price: Math.floor(Math.random() * 500) + 700,
-      experience: `${Math.floor(Math.random() * 10) + 5} лет`,
-      avatar: user.avatar || (Math.random() > 0.5 ? '👨‍🏫' : '👩‍🏫'),
-      description: `Опытный преподаватель ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}. Подготовка к ЕГЭ и олимпиадам.`,
-    }));
+    const tutors = users.map((user, index) => {
+      const russianName = getRandomRussianName();
+      return {
+        id: user.id,
+        name: russianName.fullName,
+        specialty: subjects[Math.floor(Math.random() * subjects.length)],
+        rating: (4.5 + Math.random() * 0.5).toFixed(2),
+        reviews: Math.floor(Math.random() * 200) + 50,
+        price: Math.floor(Math.random() * 500) + 700,
+        experience: `${Math.floor(Math.random() * 10) + 5} лет`,
+        avatar: user.avatar || russianName.avatar,
+        description: `Опытный преподаватель ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}. Подготовка к ЕГЭ и олимпиадам.`,
+      };
+    });
     console.log('Tutors generated:', tutors);
     return tutors;
   } catch (error) {
@@ -77,17 +129,16 @@ export async function getTutorsData() {
     console.log('Using fallback dynamic data');
     const tutors = [];
     for (let i = 0; i < 10; i++) {
-      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const russianName = getRandomRussianName();
       tutors.push({
         id: i + 1,
-        name: `${firstName} ${lastName}`,
+        name: russianName.fullName,
         specialty: subjects[Math.floor(Math.random() * subjects.length)],
         rating: (4.5 + Math.random() * 0.5).toFixed(2),
         reviews: Math.floor(Math.random() * 200) + 50,
         price: Math.floor(Math.random() * 500) + 700,
         experience: `${Math.floor(Math.random() * 10) + 5} лет`,
-        avatar: Math.random() > 0.5 ? '👨‍🏫' : '👩‍🏫',
+        avatar: russianName.avatar,
         description: `Опытный преподаватель ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}. Подготовка к ЕГЭ и олимпиадам.`,
       });
     }

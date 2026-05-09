@@ -205,7 +205,16 @@ export async function initTutorsPage() {
   const urlSubject = urlParams.get('subject');
   const urlSearch = urlParams.get('search');
 
-  if (urlSubject) filterSubject.value = urlSubject;
+  if (urlSubject) {
+    const hasOption = Array.from(filterSubject.options).some((opt) => opt.value === urlSubject);
+    if (!hasOption) {
+      const option = document.createElement('option');
+      option.value = urlSubject;
+      option.textContent = urlSubject;
+      filterSubject.appendChild(option);
+    }
+    filterSubject.value = urlSubject;
+  }
   if (urlSearch) searchInput.value = urlSearch;
 
   filterAndSortTutors();

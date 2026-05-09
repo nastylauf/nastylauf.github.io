@@ -11,8 +11,8 @@ export async function initProfilePage() {
   let myLessons = getFromLocalStorage('myLessons', []);
   let favorites = getFromLocalStorage('favorites', []);
   let userProfile = getFromLocalStorage('userProfile', {
-    name: 'Анна',
-    surname: 'Иванова',
+    name: 'Анастасия',
+    surname: 'Уточкинаа',
     role: 'Студентка',
     course: '2 курс',
     city: 'Москва',
