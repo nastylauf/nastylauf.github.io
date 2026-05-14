@@ -10,13 +10,13 @@ export async function initProfilePage() {
   // Данные из localStorage
   let myLessons = getFromLocalStorage('myLessons', []);
   let favorites = getFromLocalStorage('favorites', []);
-  let userProfile = {
+  let userProfile = getFromLocalStorage('userProfile', {
     name: 'Анастасия',
-    surname: 'Уточкинаа',
+    surname: 'Уточкина',
     role: 'Студентка',
     course: '2 курс',
     city: 'Москва',
-  };
+  });
 
   // Элементы профиля
   const profileNameEl = document.getElementById('profileName');
